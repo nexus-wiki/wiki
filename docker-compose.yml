@@ -1,0 +1,25 @@
+version: '3.2'
+services:
+  db:
+    container_name: db
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - mysql:/var/lib/mysql
+  web:
+    build:
+      context: ./conf/web
+    container_name: web 
+    links:
+      - db
+    ports:
+      - "443:443"
+    volumes:
+      - html:/var/www/html
+volumes:
+  html:
+  mysql:
