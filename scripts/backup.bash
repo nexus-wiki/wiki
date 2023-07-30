@@ -9,6 +9,11 @@ _create_backup() {
     local git_toplevel=$(git rev-parse --show-toplevel)
   fi
 
+  if ! docker exec -it db /bin/bash -c 'command -V mysqldump' >/dev/null 2>&1; then
+    printf "%s\n" "INFO : Installing mysql-client in db container..."
+    docker exec -it db /bin/bash -c 'apt -yqq update && apt install -yqq mysql-client'
+  fi
+
   local backup_time=$(date +%s-%Y-%m-%d)
   local maintenance_message="\$wgReadOnly = 'Backing up database. Write access will be restored shortly...';"
 
